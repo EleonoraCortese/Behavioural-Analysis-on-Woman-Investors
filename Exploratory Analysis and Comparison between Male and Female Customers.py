@@ -1,10 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # the code performs some basic exploratory data analysis and creates some visualizations to help understand the dataset
-
-# In[179]:
-
 
 #Imports necessary Python libraries including NumPy, Pandas, Matplotlib, Seaborn, and SciPy.
 import numpy as np
@@ -13,74 +7,40 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import seaborn as sns
 
-
-# In[86]:
-
-
 #Reading the CSV file into a Pandas DataFrame object named df.
 df = pd.read_csv('/Users/cortess/Desktop/Tesi/Clean4descriptive.csv')
-
-
-# In[87]:
-
 
 #Displaying the first few rows of the DeteFrame
 df.head()
 
-
-# In[88]:
-
-
 #Displaying all the columns contained in the Dataframe 
 print(df.columns)
-
-
-# In[89]:
-
 
 #Dropping the unnecessary columns from the DataFrame.
 df.drop(['Unnamed: 0'], inplace=True, axis=1)
 
-
-# In[90]:
-
-
 #Printing the summary statistics of the DataFrame using the describe() method.
 df.describe()
 
-
-# In[91]:
-
-
-# Calculating and printing the percentage of men and women in the sample 
+# Calculating and printing the percentage of male and female customers in the sample 
 df1=df.copy()
 print("Percentuale di uomini e donne nel campione")
 perc=list(df1['SESSO'].value_counts()/200000*100)
 print(f'donne:{round(perc[0],2)}%')
 print(f'uomini:{round(perc[1],2)}%')
 
-
 #Creating a pie chart to visualize the result.
 labels = 'Donne', 'Uomini'
 sizes = [perc[0], perc[1]]
-
 fig1, ax1 = plt.subplots()
 ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
         shadow=False, startangle=90, textprops={'fontsize': 15})
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
 plt.show()
-
-
-# In[92]:
-
 
 #Creating a bar plot to show the distribution of age groups in the sample.
 classi = ['18-24','25-34','35-44','45-54','55-64','65-74','75+']
 frequenze = [4405,13694,22346,35246,42697,40764,40848]
-
-
-
 plt.rcParams["figure.figsize"] = [17.00, 11.50]
 plt.rcParams["figure.autolayout"] = True
 plt.title("DISTRIBUZIONE PER CLASSI D'ETA'")
@@ -88,37 +48,21 @@ plt.ylabel('COUNT', fontsize=12)
 plt.xlabel('CLASSI D\'ETA',fontsize=12)
 plt.xticks(fontsize=12)
 plt.yticks(fontsize=12)
-
 plt.bar(classi, frequenze)
-
 plt.show()
-
-
-# In[93]:
-
 
 #Calculating the total patrimony in the sample
 df1['PATRIMONIO'].sum()
 
 
-# In[94]:
-
-
 #Calculating and printing the average age in the sample
-
 eta_count=list(df1.CLASSI_ETA.value_counts())
-
 val_centr=[(55+64)/2,(65+74)/2,(75+90)/2,(45+54)/2,(35+44)/2,(25+34)/2,(18+24)/2]
-
 pondera = list(zip(val_centr,eta_count))
-
 ponderata=[]
 for i in pondera:
     ponderata.append((i[0]*i[1])/df1.shape[0])
 print(f'età media: {round(sum(ponderata),2)}')
-
-
-# In[95]:
 
 
 #creating a bar plot to show the average patrimony for each age group.
@@ -126,16 +70,9 @@ ax1 = df1.groupby('CLASSI_ETA')['PATRIMONIO'].mean().plot(kind='bar', title ="PA
 ax1.set_xlabel("CLASSI D'ETÁ", fontsize=12)
 ax1.set_ylabel("PATRIMONIO IN € ", fontsize=12)
 
-
-# In[96]:
-
-
 #Creating a bar plot to show the distribution of risk propensity in the sample.
 propensione = ['1','2','3','4','5']
 frequenze = [9539,94968,81223,13338,932]
-
-
-
 plt.rcParams["figure.figsize"] = [17.00, 11.50]
 plt.rcParams["figure.autolayout"] = True
 plt.title("DISTRIBUZIONE PER PROPENSIONE AL RISCHIO")
@@ -143,71 +80,41 @@ plt.ylabel('COUNT', fontsize=12)
 plt.xlabel('PROPENSIONE AL RISCHIO',fontsize=12)
 plt.xticks(fontsize=12)
 plt.yticks(fontsize=12)
-
 plt.bar(propensione, frequenze)
-
 plt.show()
-
-
-# In[97]:
-
 
 #Creating a bar plot to show the distribution of customers for each segment
 ax = df1['SEGMENTO'].value_counts().plot(kind='bar', title ="DISTRIBUZIONE PER SEGMENTO", figsize=(15, 10), fontsize=12)
 ax.set_xlabel("SEGMENTO", fontsize=12)
 ax.set_ylabel("COUNT", fontsize=12)
 
-
-# In[98]:
-
-
 #Creating a bar plot to show the average patrimony for each segment 
 ax1 = df1.groupby('SEGMENTO')['PATRIMONIO'].mean().plot(kind='bar', title ="Patrimonio medio vs segmento", figsize=(15, 10), legend=True, fontsize=12)
 ax1.set_xlabel("Segmento", fontsize=12)
 ax1.set_ylabel("Patrimonio", fontsize=12)
 
-
-# In[99]:
-
-
 #Calculating and printing the average wealth for multibank and non-multibank customers 
-
 mb=list(df1.FL_MULTIBANCA.value_counts()/200000*100)
-
 print(f'Patrimonio medio vs multibanca:\n',round(df1.groupby('FL_MULTIBANCA')['PATRIMONIO'].mean(),3))
 
 #creating a pie chart to visualize the result
 labels1 = 'Multibanca', 'Non-multibanca'
 sizes1 = [mb[0], mb[1]]
-
 fig1, ax1 = plt.subplots()
 ax1.pie(sizes1, labels=labels1, autopct='%1.1f%%',
         shadow=False, startangle=90, textprops={'fontsize': 13})
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
 plt.show()
-
-
-# In[100]:
-
 
 #Creating a bar plot to show the average wealth for each gender
 ax1 = df1.groupby('SESSO')['PATRIMONIO'].mean().plot(kind='bar', title ="Patrimonio medio vs sesso", figsize=(15, 10), legend=True, fontsize=12)
 ax1.set_xlabel("Sesso", fontsize=12)
 ax1.set_ylabel("Patrimonio", fontsize=12)
 
-
-# In[101]:
-
-
 #Creating a bar plot to show the distribution of customers in different geographic areas
 ax = df1['AREA_TERRITORIALE'].value_counts().plot(kind='bar', title ="DISTRIBUZIONE PER AREA TERRITORIALE", figsize=(15, 10), fontsize=12)
 ax.set_xlabel("AREA TERRITORIALE", fontsize=12)
 ax.set_ylabel("COUNT", fontsize=12)
-
-
-# In[102]:
-
 
 #Printing the average "PATRIMONIO" (wealth) per "AREA_TERRITORIALE" (territorial area)
 print(f'Media patrimonio per area territoriale:\n',round(df1.groupby('AREA_TERRITORIALE')['PATRIMONIO'].mean(),3))
@@ -216,10 +123,6 @@ print(f'Media patrimonio per area territoriale:\n',round(df1.groupby('AREA_TERRI
 ax1 = df1.groupby('AREA_TERRITORIALE')['PATRIMONIO'].mean().plot(kind='bar', title ="Patrimonio medio per area territoriale", figsize=(15, 10), legend=True, fontsize=12)
 ax1.set_xlabel("Area territoriale", fontsize=12)
 ax1.set_ylabel("Patrimonio", fontsize=12)
-
-
-# In[103]:
-
 
 # Print the percentage of customers per "REGIONE" (region)
 print(df1.REGIONE.value_counts()/200000*100)
@@ -232,17 +135,12 @@ ax = df1['REGIONE'].value_counts().plot(kind='bar', title ="DISTRIBUZIONE PER RE
 ax.set_xlabel("REGIONE", fontsize=12)
 ax.set_ylabel("COUNT", fontsize=12)
 
-
-# In[104]:
-
-
 # Print the percentage of customers per "CLUSTER_DIGITAL" (digital cluster)
 print(df1.CLUSTER_DIGITAL.value_counts()/200000*100)
 
 # Create a bar plot of the percentage of customers per "CLUSTER_DIGITAL" (digital cluster)
 cluster=['D0','D1','D2','D3','D4']
 perc=[44.2540,8.4745,19.3365,25.3845,2.5505]
-
 figure2 = plt.bar(cluster, perc)
 plt.title("DIGITALIZZAZIONE DELLA CLIENTELA",fontsize=15)
 plt.rcParams["figure.figsize"] = [10.00, 11.50]
@@ -250,18 +148,10 @@ plt.xlabel('CLUSTER DIGITAL',fontsize=15 )
 plt.ylabel('% SAMPLE',fontsize=15)
 plt.show()
 
-
-# In[105]:
-
-
 # Create a bar plot of the average "PATRIMONIO" (wealth) per "CLUSTER_DIGITAL" (digital cluster)
 ax1 = df1.groupby('CLUSTER_DIGITAL')['PATRIMONIO'].mean().plot(kind='bar', title ="Patrimonio medio per cluster digital", figsize=(15, 10), legend=True, fontsize=12)
 ax1.set_xlabel("CLUSTER_DIGITAL", fontsize=12)
 ax1.set_ylabel("Patrimonio", fontsize=12)
-
-
-# In[106]:
-
 
 # Create a grouped bar plot of the number of customers per "CLASSI_ETA" (age class) and "CLUSTER_DIGITAL" (digital cluster)
 ax = df1.groupby(['CLASSI_ETA']).CLUSTER_DIGITAL.value_counts().reset_index(name='counts').pivot(index='CLASSI_ETA', columns='CLUSTER_DIGITAL', values='counts').plot(kind='bar',width = 0.9)
@@ -273,16 +163,8 @@ plt.rcParams["figure.figsize"] = [17.00, 11.50]
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 
-
-# In[107]:
-
-
 #printing the average wealth in the sample
 print(f'il partimonio medio è di: {round(df1.PATRIMONIO.mean(),2)}€')
-
-
-# In[108]:
-
 
 #Calculating the percentage of the three product categories: Liquidity, Savings and Investments on the overall wealth
 L=df1['LIQUIDITA'].mean()*100/df1["PATRIMONIO"].mean()
@@ -294,15 +176,10 @@ print(f'liquidità:{round(L,4)}%')
 print(f'risparmio:{round(R,4)}%')
 print(f'Investimento:{round(I,4)}%')
 
-
-# In[109]:
-
-
 # Creating donut chart showing the distribution of the three product categories based on the calculated percentages
 labels0 = 'LIQUIDITÁ', 'RISPARMIO', 'INVESTIMENTO'
 sizes0 = [L, R, I]
 colors=['#cc99ff','#5900b3','#8600b3']
-
 fig0, ax0 = plt.subplots()
 ax0.pie(sizes0, labels=labels0, colors=colors, autopct='%1.1f%%', startangle=90, textprops={'fontsize': 15})
 ax0.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
@@ -314,14 +191,8 @@ plt.text(0, 0, "67Mila€", ha='center', va='center', fontsize=42)
 
 # Adding the inner circle in Pie chart
 fig0.gca().add_artist(centre_circle)
-
 plt.title('RIPARTIZIONE DEL PATRIMONIO SUI 3 MACROAGGREGATI DI PRODOTTO', fontsize=15)
-
 plt.show()
-
-
-# In[110]:
-
 
 # Define a list containing all products 
 ind=["FL_CCBP", "FL_LIB", "FL_BFP", "FL_TITOLI", "FL_FONDI",
@@ -342,49 +213,27 @@ plt.rcParams["figure.autolayout"] = True
 plt.title("POSSESSO PRODOTTI")
 plt.ylabel('COUNT')
 plt.xlabel('PRODOTTI')
-
-
 plt.bar(ind, fre)
-
 plt.show()
-
-
-# In[111]:
-
 
 # Define lists of product categories for each of the three macro categories
 pdt_liq = ["PATRIMONIO_CONTI", "PATRIMONIO_LIBRETTI", "PATRIMONIO_POSTEPAY", "PATRIMONIO_EVOLUTION"]
 pdt_risp = ['PATRIMONIO_BFP']
 pdt_inv = ['PATRIMONIO_TITOLI','PATRIMONIO_FONDI','PATRIMONIO_RAMO_I','PATRIMONIO_RAMO_III','PATRIMONIO_RAMO_IV','PATRIMONIO_MULTIRAMO','PATRIMONIO_PREVIDENZA','PATRIMONIO_PERSONA']
 
-
-# In[112]:
-
-
 #Creating a piechart showing the distribution of Investors (Investitori) and not Investorn (Non Investitori) in the sample
 ind=["INVESTITORI",'NON INVESTITORI']
-fre=[49.734,50.266]
-  
+fre=[49.734,50.266]  
 labels1 = ind
 sizes1 = fre
-
 fig1, ax1 = plt.subplots()
 ax1.pie(sizes1, labels=labels1, autopct='%1.1f%%',
         shadow=False, startangle=90, textprops={'fontsize': 20})
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
 plt.show()
-
-
-# In[113]:
-
 
 # printing the number of Investors and not investors in the Dataset
 df1["FL_INVESTIMENTO"].value_counts()
-
-
-# In[165]:
-
 
 # Create a new DataFrame called "dfinv" containing only the rows of "df1" where the value in the "FL_INVESTIMENTO" column is equal to 1
 #So containing only Investors
@@ -393,29 +242,17 @@ dfinv=df1[df1["FL_INVESTIMENTO"]==1]
 # Print the number of rows in the "dfinv" DataFrame
 dfinv.shape[0]
 
-
-# In[115]:
-
-
 # Calculating the percentages allocated by investors to each investment product
 print('percentuali allocate sui singoli prodotti di investimento dagli investitori:\n')
 percinv=[]
 for i in pdt_inv:
     percinv.append(round(dfinv[i].mean()*100/dfinv['INVESTIMENTO'].mean(),2))
-
 percpdt=list(zip(pdt_inv,percinv))
 print(percpdt)
-
-
-# In[116]:
-
 
 #Creating a barplot representing the percentage allocated by investors to each investment product
 labels = pdt_inv
 sizes = percinv
-
-import matplotlib.pyplot as plt
-
 plt.rcParams["figure.figsize"] = [25.00, 11.50]
 plt.rcParams["figure.autolayout"] = True
 plt.title("PATRIMONIO VS PRODOTTI", fontsize=15)
@@ -423,15 +260,10 @@ plt.ylabel('% DI PATRIMONIO ALLOCATO', fontsize=15)
 plt.xlabel('PRODOTTI D\'INVESTIMENTO',fontsize=15)
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
-
 plt.bar(labels, sizes)
-
 plt.show()
 
-
-# ## ANALISI DEL CAMPIONE IN BASE AL SESSO
-
-# In[117]:
+# COMPARISONS BETWEEN MALE AND FEMALE CUSTOMERS
 
 
 #Creating a dataframe from the original one which contains only female customers

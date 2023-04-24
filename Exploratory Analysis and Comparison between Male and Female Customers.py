@@ -10,6 +10,8 @@ import seaborn as sns
 #Reading the CSV file into a Pandas DataFrame object named df.
 df = pd.read_csv('/Users/cortess/Desktop/Tesi/Clean4descriptive.csv')
 
+##GENERAL STATISTICS ON THE OVERALL SAMPLE
+
 #Displaying the first few rows of the DeteFrame
 df.head()
 
@@ -54,7 +56,6 @@ plt.show()
 #Calculating the total patrimony in the sample
 df1['PATRIMONIO'].sum()
 
-
 #Calculating and printing the average age in the sample
 eta_count=list(df1.CLASSI_ETA.value_counts())
 val_centr=[(55+64)/2,(65+74)/2,(75+90)/2,(45+54)/2,(35+44)/2,(25+34)/2,(18+24)/2]
@@ -63,7 +64,6 @@ ponderata=[]
 for i in pondera:
     ponderata.append((i[0]*i[1])/df1.shape[0])
 print(f'età media: {round(sum(ponderata),2)}')
-
 
 #creating a bar plot to show the average patrimony for each age group.
 ax1 = df1.groupby('CLASSI_ETA')['PATRIMONIO'].mean().plot(kind='bar', title ="PATRIMONIO MEDIO PER CLASSI D'ETÁ", figsize=(15, 10), legend=False, fontsize=12)
@@ -263,8 +263,7 @@ plt.yticks(fontsize=15)
 plt.bar(labels, sizes)
 plt.show()
 
-# COMPARISONS BETWEEN MALE AND FEMALE CUSTOMERS
-
+## COMPARISONS BETWEEN MALE AND FEMALE CUSTOMERS
 
 #Creating a dataframe from the original one which contains only female customers
 dff = df1[df1['SESSO'] == "F"]  

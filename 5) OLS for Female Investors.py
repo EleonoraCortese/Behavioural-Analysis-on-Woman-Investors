@@ -1,15 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
 
 #import required libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 #regression
 import statsmodels.api as sm
 #VIF
@@ -22,23 +16,11 @@ from statsmodels.graphics.regressionplots import plot_leverage_resid2
 import statsmodels.stats.api as sms
 from statsmodels.compat import lzip
 
-
-# In[28]:
-
-
 #Load the female investors' dataframe 
 df = pd.read_csv('path', index_col = 0)
 
-
-# In[30]:
-
-
 #View the columns in DataFrame
 df.columns
-
-
-# In[31]:
-
 
 #Define a set of independent variables
 X=df.drop(['INVESTIMENTO'],1)
@@ -46,12 +28,7 @@ X=df.drop(['INVESTIMENTO'],1)
 #Define the dependent variable as "Investimento"
 y=df[['INVESTIMENTO']]
 
-
-# In[33]:
-
-
-#Define a list of columns to be dropped
-
+#Define a list of non-relevant columns to be dropped
 to_drop=['FL_ACCR_STIP_PENS_CC','FL_CCBP','FL_PREVIDENZA','FL_PERSONA',
          'FL_RAMO_III','FL_RAMO_IV','FL_MULTIRAMO','PATRIMONIO_BFP',
          'PATRIMONIO_RAMO_I','FL_RISPARMIO','LIQUIDITA','RISPARMIO',
@@ -69,29 +46,14 @@ to_drop=['FL_ACCR_STIP_PENS_CC','FL_CCBP','FL_PREVIDENZA','FL_PERSONA',
        'REGIONE_Toscana', 'REGIONE_Trentino Alto Adige', 'REGIONE_Umbria', "PATRIMONIO_RISCHIO","%INV",
        "REGIONE_Val D'Aosta", "REGIONE_Veneto",'%RISCHIO','Cluster']
 
-              
- 
-
-
-# In[34]:
-
-
 #drop the columns
 X.drop(to_drop,1,inplace=True)
-
-
-# In[ ]:
-
 
 #Create a correlation matrix between the relevant independent variables
 plt.figure(figsize = (70,40))
 corr = X.corr()
 matrix = np.triu(corr)
 sns.heatmap(corr, annot=True, mask = matrix)
-
-
-# In[37]:
-
 
 #Drop variables with high correlation
 X.drop('PATRIMONIO_EVOLUTION',1,inplace=True)
@@ -101,19 +63,10 @@ X.drop('PATRIMONIO_CONTI',1,inplace=True)
 X.drop('PATRIMONIO_LIBRETTI',1,inplace=True)
 X.drop('TIPO_INTESTAZIONE_Monointestati',1,inplace=True)
 
-
-# In[40]:
-
-
 #run a OLS 
 model = sm.OLS(y,X)
-
 results_ols_big = model.fit(cov_type='hc0') #'h0' --> heteroscedasticity robust
 print(results_ols_big.summary())
-
-
-# In[41]:
-
 
 #calculate the Variance Inflation Factor 
 val = X[list(X.columns[:-2])]
@@ -122,32 +75,16 @@ vif_info['VIF'] = [variance_inflation_factor(val.values, i) for i in range(val.s
 vif_info['Column'] = val.columns
 vif_info.sort_values('VIF', ascending=False)
 
-
-# In[42]:
-
-
 #Influence test
 test_class = OLSInfluence(results_ols_big)
 test_class.dfbetas[:5, :]
-
-
-# In[43]:
-
 
 #plot residuals
 fig, ax = plt.subplots(figsize=(40, 40))
 fig = plot_leverage_resid2(results_ols_big, ax=ax)
 
-
-# In[44]:
-
-
 #multicollinearity test
 np.linalg.cond(results_ols_big.model.exog)
-
-
-# In[45]:
-
 
 #Breush-Pagan
 name = ["Lagrange multiplier statistic", "p-value", "f-value", "f p-value"]

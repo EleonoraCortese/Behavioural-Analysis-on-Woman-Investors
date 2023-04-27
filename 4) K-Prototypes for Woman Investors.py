@@ -293,7 +293,7 @@ dfcluster=cl.join(finvestors)
 dfcluster.to_csv('Cluster_Investitrici_Completo.csv')
 
 
-## PERFORMING SOME BASICS STATISTICS TO DESCRIBE EACH CLUSTER
+## PERFORMING SOME BASIC STATISTICS TO DESCRIBE EACH CLUSTER
 
 # Create 4 Dataframe based on the cluster membership
 cl0=dfcluster[dfcluster["Cluster"]==0]
